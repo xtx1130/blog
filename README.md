@@ -1,2 +1,2 @@
 # blog
-talk is cheap, show me your code
+不喜欢写文字，不过总归要留下点什么。。。
