@@ -13,3 +13,4 @@
 - [node源码粗读(1)：一个简单的nodejs文件从运行到结束都发生了什么](https://github.com/xtx1130/blog/issues/5)
 - [node源码粗读（2）：node编译过程详解及如何在本地进行源码修改和调试](https://github.com/xtx1130/blog/issues/9)
 - [node源码粗读（3）：node_js2c的前世今生](https://github.com/xtx1130/blog/issues/10)
+- [node源码粗读（4）：process对象底层实现](https://github.com/xtx1130/blog/issues/12)
