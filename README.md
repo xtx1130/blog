@@ -14,3 +14,12 @@
 - [node源码粗读（2）：node编译过程详解及如何在本地进行源码修改和调试](https://github.com/xtx1130/blog/issues/9)
 - [node源码粗读（3）：node_js2c的前世今生](https://github.com/xtx1130/blog/issues/10)
 - [node源码粗读（4）：process对象底层实现](https://github.com/xtx1130/blog/issues/12)
+
+### 踩坑系列
+工作中遇到的难踩的坑
+
+*listing:*
+- [针对于extends koa2 导致babel转义时造成错误的处理方案](https://github.com/xtx1130/blog/issues/1)
+- [关于chrome浏览器无法正确处理favicon.ico返回的问题](https://github.com/xtx1130/blog/issues/3)
+- [AnimateCC和createjs遇到的坑](https://github.com/xtx1130/blog/issues/11)
+- [弹幕效果遇到的坑](https://github.com/xtx1130/blog/issues/13)
