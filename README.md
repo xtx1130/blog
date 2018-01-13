@@ -23,3 +23,9 @@
 - [关于chrome浏览器无法正确处理favicon.ico返回的问题](https://github.com/xtx1130/blog/issues/3)
 - [AnimateCC和createjs遇到的坑](https://github.com/xtx1130/blog/issues/11)
 - [弹幕效果遇到的坑](https://github.com/xtx1130/blog/issues/13)
+### 入门系列
+一些包或框架的用法
+
+*listing*
+- [docker + node 入门](https://github.com/xtx1130/blog/issues/4)
+- [Babylon和babel-traverse详解](https://github.com/xtx1130/blog/issues/7)
