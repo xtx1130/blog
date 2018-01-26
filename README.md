@@ -15,6 +15,7 @@
 - [node源码粗读（3）：node_js2c的前世今生](https://github.com/xtx1130/blog/issues/10)
 - [node源码粗读（4）：process对象底层实现](https://github.com/xtx1130/blog/issues/12)
 - [node源码粗读（5）：通过调试./lib库的js代码来看javascript在node中运行环境的变化](https://github.com/xtx1130/blog/issues/14)
+- [node源码粗读（6）：从./lib/timers.js来看timers相关API底层实现](https://github.com/xtx1130/blog/issues/15)
 ### 踩坑系列
 工作中遇到的难踩的坑
 
