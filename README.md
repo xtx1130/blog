@@ -16,6 +16,7 @@
 - [node源码粗读（4）：process对象底层实现](https://github.com/xtx1130/blog/issues/12)
 - [node源码粗读（5）：通过调试./lib库的js代码来看javascript在node中运行环境的变化](https://github.com/xtx1130/blog/issues/14)
 - [node源码粗读（6）：从./lib/timers.js来看timers相关API底层实现](https://github.com/xtx1130/blog/issues/15)
+- [node源码粗读（7）：nextTick和microtasks从bootstrap到event-loop全阶段解读](https://github.com/xtx1130/blog/issues/16)
 ### 踩坑系列
 工作中遇到的难踩的坑
 
