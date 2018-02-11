@@ -25,6 +25,7 @@
 - [关于chrome浏览器无法正确处理favicon.ico返回的问题](https://github.com/xtx1130/blog/issues/3)
 - [AnimateCC和createjs遇到的坑](https://github.com/xtx1130/blog/issues/11)
 - [弹幕效果遇到的坑](https://github.com/xtx1130/blog/issues/13)
+- [H5全屏视频+暂停交互遇到的坑和解决办法](https://github.com/xtx1130/blog/issues/17)
 ### 入门系列
 一些包或框架的用法
 
