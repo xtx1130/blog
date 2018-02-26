@@ -27,8 +27,9 @@
 - [弹幕效果遇到的坑](https://github.com/xtx1130/blog/issues/13)
 - [H5全屏视频+暂停交互遇到的坑和解决办法](https://github.com/xtx1130/blog/issues/17)
 ### 入门系列
-一些包或框架的用法
+一些包或框架的用法或原理
 
 *listing*
 - [docker + node 入门](https://github.com/xtx1130/blog/issues/4)
 - [Babylon和babel-traverse详解](https://github.com/xtx1130/blog/issues/7)
+- [nextjs cli部分源码解读](https://github.com/xtx1130/blog/issues/18)
