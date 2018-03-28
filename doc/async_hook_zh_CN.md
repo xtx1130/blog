@@ -61,11 +61,11 @@ function promiseResolve(asyncId) { }
 
 添加于：v8.1.0
 
-- `callbacks` <Object> 注册的钩子回调
-  - `init` <Function> init 回调
-  - `before` <Function> before 回调
-  - `after` <Function> after 回调
-  - `destroy` <Function> destory回调
+- `callbacks` &lt;Object&gt; 注册的钩子回调
+  - `init` &lt;Function&gt; init 回调
+  - `before` &lt;Function&gt; before 回调
+  - `after` &lt;Function&gt; after 回调
+  - `destroy` &lt;Function&gt; destory回调
 - 返回：用来开启或关闭钩子的`{AstncHook}`实例
 
 注册函数在每个异步操作的不同生命周期中被调用。
@@ -119,8 +119,9 @@ function debug(...args) {
 
 #### `asyncHook.enable()`
 
-- 返回：<AsyncHook> `asyncHook`的引用
-  开启已有的`AsyncHook`实例的回调。如果没有提供回调函数，开启的会是一个空函数。
+- 返回：&lt;AsyncHook&gt; `asyncHook`的引用
+
+开启已有的`AsyncHook`实例的回调。如果没有提供回调函数，开启的会是一个空函数。
 
 `AsyncHook`实例默认是关闭的。如果要在创建之后立刻开启，可以参考下面的形式。
 ```js
@@ -131,9 +132,10 @@ const hook = async_hooks.createHook(callbacks).enable();
 
 #### `asyncHook.disable()`
 
-- 返回：<AsyncHook> `asyncHook`的引用
-  将某个`AsyncHook`实例的回调在全局asyncHook回调池中禁用掉。钩子在被禁用掉之后，只有通过重新启用才能继续呗调用到。  
-  为了API的一致性，`disable()`也会返回`AsyncHook`的实例。
+- 返回：&lt;AsyncHook&gt; `asyncHook`的引用
+  
+将某个`AsyncHook`实例的回调在全局asyncHook回调池中禁用掉。钩子在被禁用掉之后，只有通过重新启用才能继续呗调用到。  
+为了API的一致性，`disable()`也会返回`AsyncHook`的实例。
 
 #### 回调钩子
 
@@ -141,10 +143,10 @@ const hook = async_hooks.createHook(callbacks).enable();
 
 ##### `init(asyncId, type, triggerAsyncId, resource)`
 
-- `asyncId` <number> 异步资源的唯一id
-- `type` <string> 异步资源的类型
-- `triggerAsyncId` <number> 异步资源在执行上下文创建时候的唯一ID
-- `resource` <Object> 异步操作的资源的引用，在被 *销毁* 的时候需要释放
+- `asyncId` &lt;number&gt; 异步资源的唯一id
+- `type` &lt;string&gt; 异步资源的类型
+- `triggerAsyncId` &lt;number&gt; 异步资源在执行上下文创建时候的唯一ID
+- `resource` &lt;Object&gt; 异步操作的资源的引用，在被 *销毁* 的时候需要释放
 
 这个钩子会在 *有可能* 发布异步事件的类实例化的时候调用。这并 *不代表* 这个实例一定会在`destroy`回调调用前调用`before`/`after`回调，只是存在这种可能性。
 
@@ -273,26 +275,30 @@ TTYWRAP(6) -> Timeout(4) -> TIMERWRAP(5) -> TickObject(3) -> root(1)
 此图只展示了资源 *何时* 创建，而不是 *为什么*，因此要跟踪 *为什么* 请使用`triggerAsyncId`。
 
 ##### `before(asyncId)`
-- `asyncId` <number>
-  当一个异步操作初始化（例如一个TCP服务器接收到了一个新的连接请求）或者完成（例如向磁盘中写入数据）的时候一个回调会被调用来通知用户。`before`会在这个回调调用之前被调用。`asyncId`是分配给将要执行回调的资源的唯一标识符。  
-  `before`会被调用0~N次。如果异步操作被取消掉那么`before`一般会被调用0次，例如TCP服务器没有收到任何连接请求。正常情况下类似于TCP服务的资源`before`一般会被调用很多次，然而类似于`fs.open()`的操作只会被调用一次。
+- `asyncId` &lt;number&gt;
+
+当一个异步操作初始化（例如一个TCP服务器接收到了一个新的连接请求）或者完成（例如向磁盘中写入数据）的时候一个回调会被调用来通知用户。`before`会在这个回调调用之前被调用。`asyncId`是分配给将要执行回调的资源的唯一标识符。  
+`before`会被调用0~N次。如果异步操作被取消掉那么`before`一般会被调用0次，例如TCP服务器没有收到任何连接请求。正常情况下类似于TCP服务的资源`before`一般会被调用很多次，然而类似于`fs.open()`的操作只会被调用一次。
 
 ##### `after(asyncId)`
-- asyncId <number>
-  在指定了`before`的回调完成调用后立即调用。  
-  注意：如果在执行回调的时候发生了未捕获的异常，`after`会在`uncaughtException`事件发生 *之后* 运行。
+- asyncId &lt;number&gt;
+
+在指定了`before`的回调完成调用后立即调用。  
+注意：如果在执行回调的时候发生了未捕获的异常，`after`会在`uncaughtException`事件发生 *之后* 运行。
 
 ##### `destroy(asyncId)`
-- `asyncId` <number>
-  在对应`asyncId`的资源被销毁之后运行。也可以被embedder API `emitDestroy()`异步调用。  
-  注意：一些资源依靠gc来清除，如果对传递给`init`的`resource`对象进行引用，则`destory`有可能不会被调用，从而导致应用中的内存泄漏。如果资源不依赖于gc清除，那么就不会有这种问题。
+- `asyncId` &lt;number&gt;
+
+在对应`asyncId`的资源被销毁之后运行。也可以被embedder API `emitDestroy()`异步调用。  
+注意：一些资源依靠gc来清除，如果对传递给`init`的`resource`对象进行引用，则`destory`有可能不会被调用，从而导致应用中的内存泄漏。如果资源不依赖于gc清除，那么就不会有这种问题。
 
 ##### `promiseResolve(asyncId)`
-- asyncId <bunber>
-  `resolve`传递给`Promise`构造函数被调用的时候调用此函数（直接或通过别的方式使得promise被resolve的时候）。  
-  请注意`resolve()`不会执行任何可观察的同步工作。  
-  注意：这并不一定意味着`Promise`在此时已经fulfilled或者rejected，假设这个`Promise`被另一个`Promise`的状态resolved.  
-  例如：
+- asyncId &lt;bunber&gt;
+
+`resolve`传递给`Promise`构造函数被调用的时候调用此函数（直接或通过别的方式使得promise被resolve的时候）。  
+请注意`resolve()`不会执行任何可观察的同步工作。  
+注意：这并不一定意味着`Promise`在此时已经fulfilled或者rejected，假设这个`Promise`被另一个`Promise`的状态resolved.  
+例如：
 ```js
 new Promise((resolve) => resolve(true)).then((a) => {});
 ```
@@ -307,8 +313,9 @@ init for PROMISE with id 6, trigger id: 5  # the Promise returned by then()
 ```
 
 ##### `async_hooks.triggerAsyncId()`
-- 返回：<number> 负责调用当前正在执行的回调的资源的ID。
-  例如：
+- 返回：&lt;number&gt; 负责调用当前正在执行的回调的资源的ID。
+
+例如：
 ```js
 const server = net.createServer((conn) => {
   // The resource that caused (or triggered) this callback to be called
@@ -360,10 +367,10 @@ asyncResource.triggerAsyncId();
 ```
 
 #### `AsyncResource(type[, options])`
-- `type` <string> 异步事件的类型
-- options <Object>
-  - `triggerAsyncId` <number> 创建这个异步事件的执行上下文的ID.**默认**：`executionAsyncId()`
-  - `requireManualDestroy` <boolean> 在对象被gc的时候禁止自动`emitDestroy`。这个属性一般不需要配置（即使手动触发`emitDestroy`），除非检索资源的asyncId并且用它调用这个敏感的API的`emitDestroy`。**默认**：`false`
+- `type` &lt;string&gt; 异步事件的类型
+- options &lt;Object&gt;
+  - `triggerAsyncId` &lt;number&gt; 创建这个异步事件的执行上下文的ID.**默认**：`executionAsyncId()`
+  - `requireManualDestroy` &lt;boolean&gt; 在对象被gc的时候禁止自动`emitDestroy`。这个属性一般不需要配置（即使手动触发`emitDestroy`），除非检索资源的asyncId并且用它调用这个敏感的API的`emitDestroy`。**默认**：`false`
 
 用法示例：
 ```js
@@ -389,20 +396,23 @@ class DBQuery extends AsyncResource {
 ```
 
 #### `asyncResource.emitBefore()`
-- 返回：<undefined>
-  在进入新的异步执行上下文的时候调用所有的`before`回调。如果对`emitBefore()`进行嵌套调用，将会跟踪`asyncId`堆栈并正确展开。
+- 返回：&lt;undefined&gt;
+
+在进入新的异步执行上下文的时候调用所有的`before`回调。如果对`emitBefore()`进行嵌套调用，将会跟踪`asyncId`堆栈并正确展开。
 
 #### `asyncResource.emitAfter()`
-- 返回：<undefined>
-  调用所有的`after`回调。如果`emitBefore()`嵌套调用，请确保堆栈的正确展开。否则会抛出一个错误。  
-  如果用户的回调抛出异常，且错误是由`uncaughtException`或者domain处理，堆栈上的`asyncId`会自动调用`emitAfter()`。
+- 返回：&lt;undefined&gt;
+
+调用所有的`after`回调。如果`emitBefore()`嵌套调用，请确保堆栈的正确展开。否则会抛出一个错误。  
+如果用户的回调抛出异常，且错误是由`uncaughtException`或者domain处理，堆栈上的`asyncId`会自动调用`emitAfter()`。
 
 #### `asyncResource.emitDestroy()`
-- 返回：<undefined>
-  调用所有的`destroy`钩子。这个方法只被允许调用一次。如果多次调用会抛出一个错误。这个方法 **必须**手动调用。如果资源最终被GC回收，那么`destroy`钩子永远不会被调用。
+- 返回：&lt;undefined&gt;
+
+调用所有的`destroy`钩子。这个方法只被允许调用一次。如果多次调用会抛出一个错误。这个方法 **必须**手动调用。如果资源最终被GC回收，那么`destroy`钩子永远不会被调用。
 
 #### `asyncResource.asyncId()`
-- 返回：<number> 分配给资源的唯一`asyncId`。
+- 返回：&lt;number&gt; 分配给资源的唯一`asyncId`。
 
 #### `asyncResource.triggerAsyncId()`
-- 返回：<number> 传递给`AsyncResource`构造函数的`triggerAsyncId`。
+- 返回：&lt;number&gt; 传递给`AsyncResource`构造函数的`triggerAsyncId`。
