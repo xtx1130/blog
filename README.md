@@ -35,6 +35,6 @@
 - [docker + node 入门](https://github.com/xtx1130/blog/issues/4)
 - [Babylon和babel-traverse详解](https://github.com/xtx1130/blog/issues/7)
 - [nextjs cli部分源码解读](https://github.com/xtx1130/blog/issues/18)
-- [nextTick中为什么需要async_hooks](https://github.com/xtx1130/blog/issues/21)
+- [nextTick中为什么需要async_hooks](https://github.com/xtx1130/blog/issues/22)
 ### 文档翻译
 - [node v8.x async_hook](https://github.com/xtx1130/blog/blob/master/doc/async_hook_zh_CN.md)
