@@ -53,12 +53,11 @@ function after(asyncId) { }
 // destroy 会在AsyncWrap实例被销毁的时候运行。.
 function destroy(asyncId) { }
 
-// promiseResolve只会被promise资源调用，在把`resolve`函数传递给`Promise`构造函数的时候才会被调用。（或者是直接或通过别的方式使得promise被resolve的时候）
-// (either directly or through other means of resolving a promise).
+// promiseResolve只会被promise资源调用，在把`resolve`函数传递给`Promise`构造函数的时候才会被调用（或者是直接或通过别的方式使得promise被resolve的时候）。
 function promiseResolve(asyncId) { }
 ```
 
-### async_hooks.createHook(callbacks)
+### `async_hooks.createHook(callbacks)`
 
 添加于：v8.1.0
 
@@ -68,4 +67,40 @@ function promiseResolve(asyncId) { }
   - `after` <Function> after 回调
   - `destroy` <Function> destory回调
 - 返回：用来开启或关闭钩子的`{AstncHook}`实例
+
+注册函数在每个异步操作的不同生命周期中被调用。
+
+`init()`/`before()`/`after()`/`destory()`会在资源生命周期各自的异步事件中被调用。
+
+所有的回调都是可配置的。例如，如果只需要在资源回收的时候跟踪，那么只需要传递`destroy`回调。在`Hook Callbacks`章节中有明确的可以传递给`callbacks`的所有函数。
+
+```js
+const async_hooks = require('async_hooks');
+
+const asyncHook = async_hooks.createHook({
+  init(asyncId, type, triggerAsyncId, resource) { },
+  destroy(asyncId) { }
+});
+```
+注意：回调可以通过原型链继承：
+```js
+class MyAsyncCallbacks {
+  init(asyncId, type, triggerAsyncId, resource) { }
+  destroy(asyncId) {}
+}
+
+class MyAddedCallbacks extends MyAsyncCallbacks {
+  before(asyncId) { }
+  after(asyncId) { }
+}
+
+const asyncHook = async_hooks.createHook(new MyAddedCallbacks());
+```
+
+#### Error Handling
+
+如果任何`AsyncHook`回调抛错，应用都会显示相应的堆栈跟踪的信息然后退出。退出路径会遵循未捕获异常，但是所有的`uncaughtException`事件监听都会被移除，因此会强制进程退出。`exit`回调会在你开启`--abort-on-uncaught-exception`参数之后才会被调用，
+
+
+
 
