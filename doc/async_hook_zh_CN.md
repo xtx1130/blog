@@ -118,6 +118,7 @@ function debug(...args) {
 如果一个异步操作需要记录日志，尽可能的使用AsyncHooks自己提供的信息来跟踪整体异步操作的流程。日志应该忽略由于日志自己的原因导致AsyncHooks回调调用。
 
 ### `asyncHook.enable()`
+
 - 返回：<AsyncHook> `asyncHook`的引用
 开启已有的`AsyncHook`实例的回调。如果没有提供回调函数，开启的会是一个空函数。
 
@@ -129,9 +130,144 @@ const hook = async_hooks.createHook(callbacks).enable();
 ```
 
 ### `asyncHook.disable()`
-- 返回：<AsyncHook> `asyncHook`的引用
-禁用已有的`AsyncHook`实例的
 
+- 返回：<AsyncHook> `asyncHook`的引用
+将某个`AsyncHook`实例的回调在全局asyncHook回调池中禁用掉。钩子在被禁用掉之后，只有通过重新启用才能继续呗调用到。  
+为了API的一致性，`disable()`也会返回`AsyncHook`的实例。
+
+### 回调钩子
+
+异步事件生命周期中关键事件被分为四块：实例化、回调之前/之后、以及实例被销毁时。
+
+#### `init(asyncId, type, triggerAsyncId, resource)`
+
+- `asyncId` <number> 异步资源的唯一id
+- `type` <string> 异步资源的类型
+- `triggerAsyncId` <number> 异步资源在执行上下文创建时候的唯一ID
+- `resource` <Object> 异步操作的资源的引用，在被 *销毁* 的时候需要释放
+
+这个钩子会在 *有可能* 发布异步事件的类实例化的时候调用。这并 *不代表* 这个实例一定会在`destroy`回调调用前调用`before`/`after`回调，只是存在这种可能性。
+
+通过打开资源，然后在资源可用之前关闭它，可以观察到这种行为。下面的片段演示了这一点。
+```js
+require('net').createServer().listen(function() { this.close(); });
+// OR
+clearTimeout(setTimeout(() => {}, 10));
+```
+每个新资源都分配了一个在当前进程范围内唯一的ID。
+
+##### `type`
+
+`type`是一个字符串，用来鉴别调用`init`的资源的类型。通常情况，它和资源的constructor是对应关系。
+```js
+FSEVENTWRAP, FSREQWRAP, GETADDRINFOREQWRAP, GETNAMEINFOREQWRAP, HTTPPARSER,
+JSSTREAM, PIPECONNECTWRAP, PIPEWRAP, PROCESSWRAP, QUERYWRAP, SHUTDOWNWRAP,
+SIGNALWRAP, STATWATCHER, TCPCONNECTWRAP, TCPSERVER, TCPWRAP, TIMERWRAP, TTYWRAP,
+UDPSENDWRAP, UDPWRAP, WRITEWRAP, ZLIB, SSLCONNECTION, PBKDF2REQUEST,
+RANDOMBYTESREQUEST, TLSWRAP, Timeout, Immediate, TickObject
+```
+资源类型为`PROMISE`也应该算在里面，用来跟踪`Promise`实例以及它们安排的异步工作。
+
+使用者可以通过embedder API来自定义自己的`type`。
+
+注意：类型名是有可能冲突的。Embedders鼓励使用独特的前缀，例如npm包的名字，来避免在监听钩子时候的冲突。
+
+##### triggerId
+
+`triggerAsyncId`是引起（或触发）新资源初始化的资源`asyncId`，并且它会导致`init`的调用。`async_hooks.executionAsyncId()`仅说明 资源是 *什么时候* 创建的，但是`triggerAsyncId`说明 的是 *为什么*这个资源会被创建。
+
+下面是`triggerAsyncId`的简单演示。
+```js
+async_hooks.createHook({
+  init(asyncId, type, triggerAsyncId) {
+    const eid = async_hooks.executionAsyncId();
+    fs.writeSync(
+      1, `${type}(${asyncId}): trigger: ${triggerAsyncId} execution: ${eid}\n`);
+  }
+}).enable();
+
+require('net').createServer((conn) => {}).listen(8080);
+```
+使用`nc localhost 8000`指令击中服务器的时候会有如下输出：
+```js
+TCPSERVERWRAP(2): trigger: 1 execution: 1
+TCPWRAP(4): trigger: 2 execution: 0
+```
+`TCPSERVERWRAP` 是接受链接的服务器。  
+`TCPWRAP` 是来自客户端的新链接。当建立新的连接时，立即构建`TCPWrap`实例。这是在JavaScript栈外发生的（边注：`executionAsyncId()`为`0`时，意为它是通过c++执行的，且在这之上没有JavaScript栈）。通过这些信息，不可能根据谁创建的它们而将资源归类到一起。因此`triggerAsyncId`被赋予的任务是在新资源存在情况下表示出这个资源代表的是什么。
+
+##### `resource`
+
+`resource`代表已经初始化的异步资源的对象。这里面存储的信息与`type`的值相关。例如，对于`GETADDRINFOREQWRAP`资源类型，`rescource`提供在`net.Server.listen（）`中用来查找主机名的IP地址时使用的主机名。用来访问这些信息的API暂时不会公开，但是通过Embedder API，用户可以提供并记录属于他们自己的资源对象。例如，一个包含正在执行SQL查询的资源对象。
+
+在Promises的情况下，`resource`会具有`promise`属性，该属性指向正在初始化的Promise,并且`parentId`属性设置为父Promise的`asyncId`，如果不存在父Promise则设为`undefined`。例如，`b = a.then(handler)`，`a`被认为是`b`的父Promise。
+
+##### 异步上下文例子
+
+下面是一个在`before`和`after`中间调用`init`的例子，特别注意`listen()`的回调会是什么样子。输出格式稍微复杂些，以使调用上下文更容易被观察到。
+```js
+let indent = 0;
+async_hooks.createHook({
+  init(asyncId, type, triggerAsyncId) {
+    const eid = async_hooks.executionAsyncId();
+    const indentStr = ' '.repeat(indent);
+    fs.writeSync(
+      1,
+      `${indentStr}${type}(${asyncId}):` +
+      ` trigger: ${triggerAsyncId} execution: ${eid}\n`);
+  },
+  before(asyncId) {
+    const indentStr = ' '.repeat(indent);
+    fs.writeSync(1, `${indentStr}before:  ${asyncId}\n`);
+    indent += 2;
+  },
+  after(asyncId) {
+    indent -= 2;
+    const indentStr = ' '.repeat(indent);
+    fs.writeSync(1, `${indentStr}after:   ${asyncId}\n`);
+  },
+  destroy(asyncId) {
+    const indentStr = ' '.repeat(indent);
+    fs.writeSync(1, `${indentStr}destroy: ${asyncId}\n`);
+  },
+}).enable();
+
+require('net').createServer(() => {}).listen(8080, () => {
+  // Let's wait 10ms before logging the server started.
+  setTimeout(() => {
+    console.log('>>>', async_hooks.executionAsyncId());
+  }, 10);
+});
+```
+仅开启服务器的时候的输出：
+```js
+TCPSERVERWRAP(2): trigger: 1 execution: 1
+TickObject(3): trigger: 2 execution: 1
+before:  3
+  Timeout(4): trigger: 3 execution: 3
+  TIMERWRAP(5): trigger: 3 execution: 3
+after:   3
+destroy: 3
+before:  5
+  before:  4
+    TTYWRAP(6): trigger: 4 execution: 4
+    SIGNALWRAP(7): trigger: 4 execution: 4
+    TTYWRAP(8): trigger: 4 execution: 4
+>>> 4
+    TickObject(9): trigger: 4 execution: 4
+  after:   4
+after:   5
+before:  9
+after:   9
+destroy: 4
+destroy: 9
+destroy: 5
+```
+注意：如示例中所示，`executionAsyncId()`和`execution`都指定了当前执行上下文的值；这是通过`before`和`after`的调用决定的。  
+仅使用`execution`来绘制资源分配结果如下：
+```js
+TTYWRAP(6) -> Timeout(4) -> TIMERWRAP(5) -> TickObject(3) -> root(1)
+```
 
 
 
