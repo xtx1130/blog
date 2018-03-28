@@ -97,9 +97,40 @@ class MyAddedCallbacks extends MyAsyncCallbacks {
 const asyncHook = async_hooks.createHook(new MyAddedCallbacks());
 ```
 
-#### Error Handling
+#### 错误处理
 
-如果任何`AsyncHook`回调抛错，应用都会显示相应的堆栈跟踪的信息然后退出。退出路径会遵循未捕获异常，但是所有的`uncaughtException`事件监听都会被移除，因此会强制进程退出。`exit`回调会在你开启`--abort-on-uncaught-exception`参数之后才会被调用，
+如果任何`AsyncHook`回调抛错，应用都会显示相应的堆栈跟踪的信息然后退出。退出路径会遵循未捕获异常，但是所有的`uncaughtException`事件监听都会被移除，因此会强制进程退出。`exit`回调会被调用，除非你的应用开启了`--abort-on-uncaught-exception`参数，在这种情况下应用的堆栈信息会打印出来，并且在应用退出的时候会留下一份内存快照。
+
+错误处理这么表现的原因是这些回调会在一个对象生命周期的不稳定阶段运行，例如在类的创建和销毁期间。正是如此，nodejs认为快速关闭这个进程是很有必要的，目的是阻止将来意外中止的发生。这是未来一个需要改进的主题：提供一个更加全面的分析去确保在执行的时候异常可以遵循正常的工作流程，没有多余的副作用。
+
+#### AsyncHooks 回调的打印
+
+由于打印到console是一个异步的操作，`console.log()`会导致AsyncHooks回调的调用。所以在AsyncHooks的回调函数中使用`console.log()`或者类似的异步操作会导致无限递归。一个十分简单的解决办法是在调试的时候使用同步的日志操作，例如`fs.writeSync(1, msg)`。这会打印到stdout，因为`1`是stdout的文件描述符，并且不会递归调用AsyncHooks因为它是同步的。
+```js
+const fs = require('fs');
+const util = require('util');
+
+function debug(...args) {
+  // use a function like this one when debugging inside an AsyncHooks callback
+  fs.writeSync(1, `${util.format(...args)}\n`);
+}
+```
+如果一个异步操作需要记录日志，尽可能的使用AsyncHooks自己提供的信息来跟踪整体异步操作的流程。日志应该忽略由于日志自己的原因导致AsyncHooks回调调用。
+
+### `asyncHook.enable()`
+- 返回：<AsyncHook> `asyncHook`的引用
+开启已有的`AsyncHook`实例的回调。如果没有提供回调函数，开启的会是一个空函数。
+
+`AsyncHook`实例默认是关闭的。如果要在创建之后立刻开启，可以参考下面的形式。
+```js
+const async_hooks = require('async_hooks');
+
+const hook = async_hooks.createHook(callbacks).enable();
+```
+
+### `asyncHook.disable()`
+- 返回：<AsyncHook> `asyncHook`的引用
+禁用已有的`AsyncHook`实例的
 
 
 
