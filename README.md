@@ -20,6 +20,7 @@
 - [node源码粗读（8）：setImmediate注册+触发全流程解析](https://github.com/xtx1130/blog/issues/19)
 - [node源码粗读（9）：nextTick、timers API、MicroTasks注册到执行全阶段解读](https://github.com/xtx1130/blog/issues/20)
 - [node源码粗读（10）：通过fs.write来看异步I/O和回调执行的整体流程](https://github.com/xtx1130/blog/issues/23)
+- [node源码粗读（11）：透过console.log来看stream.write](https://github.com/xtx1130/blog/issues/24)
 ### 踩坑系列
 工作中遇到的难踩的坑
 
