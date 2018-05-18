@@ -30,6 +30,7 @@
 - [AnimateCC和createjs遇到的坑](https://github.com/xtx1130/blog/issues/11)
 - [弹幕效果遇到的坑](https://github.com/xtx1130/blog/issues/13)
 - [H5全屏视频+暂停交互遇到的坑和解决办法](https://github.com/xtx1130/blog/issues/17)
+- [ava@0.25.0以及搭配nyc使用的时候错误栈问题 ](https://github.com/xtx1130/blog/issues/25)
 ### 入门系列
 一些包或框架的用法或原理
 
