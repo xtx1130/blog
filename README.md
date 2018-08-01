@@ -25,8 +25,8 @@
 
 ### libuv粗读系列
 
-*listing*
--[libuv源码粗读（1）： uv_loop_t 结构体介绍](https://github.com/xtx1130/blog/issues/27)
+*listing:*
+- [libuv源码粗读（1）： uv_loop_t 结构体介绍](https://github.com/xtx1130/blog/issues/27)
 
 ### 踩坑系列
 工作中遇到的难踩的坑
