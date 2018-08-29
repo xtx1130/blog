@@ -27,6 +27,7 @@
 
 *listing:*
 - [libuv源码粗读（1）： uv_loop_t 结构体介绍](https://github.com/xtx1130/blog/issues/27)
+- [libuv源码粗读（2）：uv_handle_t 基础句柄结构体介绍](https://github.com/xtx1130/blog/issues/29)
 
 ### 踩坑系列
 工作中遇到的难踩的坑
