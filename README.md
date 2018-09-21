@@ -24,7 +24,7 @@
 - [node源码粗读（12）：通过`net.createConnection`来看socket的Event Emitter的实现](https://github.com/xtx1130/blog/issues/26)
 
 ### libuv粗读系列
-
+libuv源码浅析。基本都是通过断点debug一点一点读下来的，主要涉及libuv中主要的几类句柄和event-loop，并会稍微串一点node相关源码进来。
 *listing:*
 - [libuv源码粗读（1）： uv_loop_t 结构体介绍](https://github.com/xtx1130/blog/issues/27)
 - [libuv源码粗读（2）：uv_handle_t 基础句柄结构体介绍](https://github.com/xtx1130/blog/issues/29)
