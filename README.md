@@ -41,6 +41,7 @@ libuv源码浅析。基本都是通过断点debug一点一点读下来的，主�
 - [H5全屏视频+暂停交互遇到的坑和解决办法](https://github.com/xtx1130/blog/issues/17)
 - [ava@0.25.0以及搭配nyc使用的时候错误栈问题 ](https://github.com/xtx1130/blog/issues/25)
 - [vue ssr 初探踩坑 ](https://github.com/xtx1130/blog/issues/30)
+- [vue ssr 深入踩坑](https://github.com/xtx1130/blog/issues/32)
 ### 入门系列
 一些包或框架的用法或原理
 
