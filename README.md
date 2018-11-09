@@ -1,5 +1,5 @@
 # blog
-这里面包含我平常工作中遇到的坑（主要是node方面的），以及node源码粗读系列文章（我会持续更新）。  
+这里面包含我平常工作中遇到的坑（主要是node方面的），以及node源码粗读系列文章和libuv源码粗读系列文章（我会持续更新）。  
 [issue](https://github.com/xtx1130/blog/issues)
 
 ### node 源码粗读系列
@@ -29,6 +29,7 @@ libuv源码浅析。基本都是通过断点debug一点一点读下来的，主�
 - [libuv源码粗读（1）： uv_loop_t 结构体介绍](https://github.com/xtx1130/blog/issues/27)
 - [libuv源码粗读（2）：uv_handle_t 基础句柄结构体介绍](https://github.com/xtx1130/blog/issues/29)
 - [libuv源码粗读（3）：uv_timer_t定时器句柄结构体介绍](https://github.com/xtx1130/blog/issues/31)
+- [libuv源码粗读（4）：uv_prepare_t预处理句柄结构体介绍](https://github.com/xtx1130/blog/issues/33)
 
 ### 踩坑系列
 工作中遇到的难踩的坑
