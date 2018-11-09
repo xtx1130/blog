@@ -1,5 +1,5 @@
 # blog
-这里面包含我平常工作中遇到的坑（主要是node方面的），以及node源码粗读系列文章和libuv源码粗读系列文章（我会持续更新）。  
+这里面包含我平常工作中遇到的坑（主要是node方面的），以及`node源码粗读系列`文章和`libuv源码粗读系列`文章（我会持续更新）。  
 [issue](https://github.com/xtx1130/blog/issues)
 
 ### node 源码粗读系列
