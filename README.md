@@ -30,6 +30,7 @@ libuv源码浅析。基本都是通过断点debug一点一点读下来的，主�
 - [libuv源码粗读（2）：uv_handle_t 基础句柄结构体介绍](https://github.com/xtx1130/blog/issues/29)
 - [libuv源码粗读（3）：uv_timer_t定时器句柄结构体介绍](https://github.com/xtx1130/blog/issues/31)
 - [libuv源码粗读（4）：uv_prepare_t预处理句柄结构体介绍](https://github.com/xtx1130/blog/issues/33)
+- [libuv源码粗读（5）：uv__io_t io观察者句柄结构体和uv__io_poll介绍](https://github.com/xtx1130/blog/issues/34)
 
 ### 踩坑系列
 工作中遇到的难踩的坑
