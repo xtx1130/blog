@@ -53,5 +53,6 @@ libuv源码浅析。基本都是通过断点debug一点一点读下来的，主�
 - [Babylon和babel-traverse详解](https://github.com/xtx1130/blog/issues/7)
 - [nextjs cli部分源码解读](https://github.com/xtx1130/blog/issues/18)
 - [nextTick中为什么需要async_hooks](https://github.com/xtx1130/blog/issues/22)
+- [基于xcode进行libuv编程之环境搭建](https://github.com/xtx1130/blog/issues/36)
 ### 文档翻译
 - [node v8.x async_hook](https://github.com/xtx1130/blog/blob/master/doc/async_hook_zh_CN.md)
